@@ -1,9 +1,8 @@
 package proj.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by SCIP on 26.07.2016.
@@ -14,6 +13,11 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String propertyName;
+    @ManyToMany
+    @JoinTable(name = "category_property", joinColumns =
+    @JoinColumn(name = "fk_property"), inverseJoinColumns =
+    @JoinColumn(name = "fk_category"))
+    List<Category> categoryList = new ArrayList<Category>();
 
     public Property() {
     }
