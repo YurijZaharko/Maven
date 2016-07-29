@@ -16,9 +16,6 @@ public class Country {
     @OneToMany(mappedBy = "country")
     List<Product> productList = new ArrayList<Product>();
 
-    @OneToMany(mappedBy = "country")
-    List<Product> productList = new ArrayList<Product>();
-
     public Country() {
     }
 

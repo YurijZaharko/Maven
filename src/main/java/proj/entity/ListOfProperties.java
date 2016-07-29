@@ -19,11 +19,9 @@ public class ListOfProperties {
     @JoinColumn(name = "fk_category"))
     private List<Category> categoryList = new ArrayList<Category>();
 
-    @ManyToMany
-    @JoinTable(name = "property_listOfProperties", joinColumns =
-    @JoinColumn(name = "fk_listOfProperties"), inverseJoinColumns =
-    @JoinColumn(name = "fk_property"))
-    private List<Property> propertyList = new ArrayList<Property>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Property property;
+
 
     public ListOfProperties() {
     }

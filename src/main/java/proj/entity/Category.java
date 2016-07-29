@@ -16,10 +16,10 @@ public class Category {
     @OneToMany(mappedBy = "category")
     List<Product> productList = new ArrayList<Product>();
     @ManyToMany
-    @JoinTable(name = "category_property", joinColumns =
+    @JoinTable(name = "category_listOfProperties", joinColumns =
     @JoinColumn(name = "fk_category"), inverseJoinColumns =
-    @JoinColumn(name = "fk_property"))
-    List<Property> listOfProperties = new ArrayList<Property>();
+    @JoinColumn(name = "fk_listOfProperties"))
+    List<ListOfProperties> listOfProperties = new ArrayList<ListOfProperties>();
 
     public Category() {
     }
