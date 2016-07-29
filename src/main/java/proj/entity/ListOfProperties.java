@@ -1,6 +1,8 @@
 package proj.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by SCIP on 26.07.2016.
@@ -10,44 +12,21 @@ public class ListOfProperties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Category category;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Property property;
+
+    @ManyToMany
+    @JoinTable(name = "category_listOfProperties", joinColumns =
+    @JoinColumn(name = "fk_listOfProperties"), inverseJoinColumns =
+    @JoinColumn(name = "fk_category"))
+    private List<Category> categoryList = new ArrayList<Category>();
+
+    @ManyToMany
+    @JoinTable(name = "property_listOfProperties", joinColumns =
+    @JoinColumn(name = "fk_listOfProperties"), inverseJoinColumns =
+    @JoinColumn(name = "fk_property"))
+    private List<Property> propertyList = new ArrayList<Property>();
 
     public ListOfProperties() {
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(Property property) {
-        this.property = property;
-    }
-
-    @Override
-    public String toString() {
-        return "ListOfProperties{" +
-                "id=" + id +
-                ", category=" + category +
-                ", property=" + property +
-                '}';
-    }
 }
