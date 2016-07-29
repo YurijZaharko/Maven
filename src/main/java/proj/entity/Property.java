@@ -13,6 +13,11 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String propertyName;
+    @ManyToMany
+    @JoinTable(name = "category_property", joinColumns =
+    @JoinColumn(name = "fk_property"), inverseJoinColumns =
+    @JoinColumn(name = "fk_category"))
+    List<Category> categoryList = new ArrayList<Category>();
 
     @ManyToMany
     @JoinTable(name = "property_listOfProperties", joinColumns =

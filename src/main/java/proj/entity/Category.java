@@ -14,13 +14,12 @@ public class Category {
     private int id;
     private String categoryName;
     @OneToMany(mappedBy = "category")
-    private List<Product> productList = new ArrayList<Product>();
-
+    List<Product> productList = new ArrayList<Product>();
     @ManyToMany
-    @JoinTable(name = "category_listOfProperties", joinColumns =
+    @JoinTable(name = "category_property", joinColumns =
     @JoinColumn(name = "fk_category"), inverseJoinColumns =
-    @JoinColumn(name = "fk_listOfProperties"))
-    List<ListOfProperties> propertiesList = new ArrayList<ListOfProperties>();
+    @JoinColumn(name = "fk_property"))
+    List<Property> listOfProperties = new ArrayList<Property>();
 
     public Category() {
     }
