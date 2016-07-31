@@ -1,6 +1,8 @@
 package proj.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by SCIP on 26.07.2016.
@@ -23,6 +25,18 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Country country;
+
+    @ManyToMany
+    @JoinTable(name = "valueOfStringProperties_product", joinColumns =
+    @JoinColumn(name = "fk_product"), inverseJoinColumns =
+    @JoinColumn(name = "fk_valueOfStringProperties"))
+    private List<ValueOfStringProperties> valueOfStringPropertiesList = new ArrayList<ValueOfStringProperties>();
+
+    @ManyToMany
+    @JoinTable(name = "integerProperties_valueOfIntegerProperties", joinColumns =
+    @JoinColumn(name = "integerProperties"), inverseJoinColumns =
+    @JoinColumn(name = "valueOfIntegerProperties"))
+    private List<ValueOfIntegerProperties> valueOfIntegerPropertiesList = new ArrayList<ValueOfIntegerProperties>();
 
     public Product() {
     }
@@ -81,6 +95,14 @@ public class Product {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public List<ValueOfStringProperties> getValueOfStringPropertiesList() {
+        return valueOfStringPropertiesList;
+    }
+
+    public void setValueOfStringPropertiesList(List<ValueOfStringProperties> valueOfStringPropertiesList) {
+        this.valueOfStringPropertiesList = valueOfStringPropertiesList;
     }
 
     @Override

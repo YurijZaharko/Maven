@@ -13,13 +13,22 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String categoryName;
+
+    @OneToMany(mappedBy = "parentId")
+    private
+    List<Category> childId = new ArrayList<Category>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category parentId;
+
     @OneToMany(mappedBy = "category")
-    List<Product> productList = new ArrayList<Product>();
-    @ManyToMany
-    @JoinTable(name = "category_listOfProperties", joinColumns =
-    @JoinColumn(name = "fk_category"), inverseJoinColumns =
-    @JoinColumn(name = "fk_listOfProperties"))
-    List<ListOfProperties> listOfProperties = new ArrayList<ListOfProperties>();
+    private List<Product> productList = new ArrayList<Product>();
+
+    @OneToMany(mappedBy = "category")
+    private List<ListOfPropertiesString> listOfPropertiesStrings = new ArrayList<ListOfPropertiesString>();
+
+    @OneToMany(mappedBy = "category")
+    private List<ListOfPropertiesInteger> listOfPropertiesIntegers = new ArrayList<ListOfPropertiesInteger>();
 
     public Category() {
     }
@@ -40,11 +49,27 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", categoryName='" + categoryName + '\'' +
-                '}';
+    public List<Category> getChildId() {
+        return childId;
+    }
+
+    public void setChildId(List<Category> childId) {
+        this.childId = childId;
+    }
+
+    public Category getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Category parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 }
