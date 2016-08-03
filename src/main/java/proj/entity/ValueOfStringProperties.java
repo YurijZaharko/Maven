@@ -12,6 +12,7 @@ public class ValueOfStringProperties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String stringValue;
 
     @ManyToMany
     @JoinTable(name = "valueOfStringProperties_product", joinColumns =
@@ -28,12 +29,24 @@ public class ValueOfStringProperties {
     public ValueOfStringProperties() {
     }
 
+    public ValueOfStringProperties(String stringValue) {
+        this.stringValue = stringValue;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
     }
 
     public List<Product> getProductList() {

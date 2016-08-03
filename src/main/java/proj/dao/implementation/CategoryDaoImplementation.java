@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
  * Created by SCIP on 31.07.2016.
  */
 public class CategoryDaoImplementation extends GenericDaoImplementation<Category, Integer> implements CategoryDao{
-    protected CategoryDaoImplementation(Class<Category> entityClass, EntityManager entityManager) {
+    public CategoryDaoImplementation(Class<Category> entityClass, EntityManager entityManager) {
         super(entityClass, entityManager);
     }
 }

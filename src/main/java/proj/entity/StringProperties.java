@@ -18,15 +18,19 @@ public class StringProperties {
     @JoinTable(name = "listOfPropertiesString_stringProperties", joinColumns =
     @JoinColumn(name = "fk_stringProperties"), inverseJoinColumns =
     @JoinColumn(name = "fk_listOfPropertiesString"))
-    private List<ListOfPropertiesString> listOfPropertiesStrings = new ArrayList<ListOfPropertiesString>();
+    private List<ListOfPropertiesString> listOfPropertiesStrings = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "valueOfStringProperties_stringProperties", joinColumns =
     @JoinColumn(name = "fk_stringProperties"), inverseJoinColumns =
     @JoinColumn(name = "fk_valueOfStringProperties"))
-    private List<ValueOfStringProperties> valueOfStringPropertiesList = new ArrayList<ValueOfStringProperties>();
+    private List<ValueOfStringProperties> valueOfStringPropertiesList = new ArrayList<>();
 
     public StringProperties() {
+    }
+
+    public StringProperties(String propertyName) {
+        this.propertyName = propertyName;
     }
 
     public int getId() {

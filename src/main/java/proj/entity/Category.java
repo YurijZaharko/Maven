@@ -33,6 +33,10 @@ public class Category {
     public Category() {
     }
 
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public int getId() {
         return id;
     }
@@ -71,5 +75,28 @@ public class Category {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public List<ListOfPropertiesString> getListOfPropertiesStrings() {
+        return listOfPropertiesStrings;
+    }
+
+    public void setListOfPropertiesStrings(List<ListOfPropertiesString> listOfPropertiesStrings) {
+        this.listOfPropertiesStrings = listOfPropertiesStrings;
+    }
+
+    public List<ListOfPropertiesInteger> getListOfPropertiesIntegers() {
+        return listOfPropertiesIntegers;
+    }
+
+    public void setListOfPropertiesIntegers(List<ListOfPropertiesInteger> listOfPropertiesIntegers) {
+        this.listOfPropertiesIntegers = listOfPropertiesIntegers;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryName='" + categoryName + '\'' +
+                '}';
     }
 }

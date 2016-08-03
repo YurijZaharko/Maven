@@ -12,6 +12,7 @@ public class ValueOfIntegerProperties {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private Integer value;
 
     @ManyToMany
     @JoinTable(name = "valueOfIntegerProperties_product", joinColumns =
@@ -28,12 +29,24 @@ public class ValueOfIntegerProperties {
     public ValueOfIntegerProperties() {
     }
 
+    public ValueOfIntegerProperties(Integer value) {
+        this.value = value;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public List<Product> getProductList() {

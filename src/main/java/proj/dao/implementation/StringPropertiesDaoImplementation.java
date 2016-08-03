@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
  * Created by SCIP on 31.07.2016.
  */
 public class StringPropertiesDaoImplementation extends GenericDaoImplementation<StringProperties, Integer> implements StringPropertiesDao{
-    protected StringPropertiesDaoImplementation(Class<StringProperties> entityClass, EntityManager entityManager) {
+    public StringPropertiesDaoImplementation(Class<StringProperties> entityClass, EntityManager entityManager) {
         super(entityClass, entityManager);
     }
 }

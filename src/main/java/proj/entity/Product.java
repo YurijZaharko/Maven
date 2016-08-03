@@ -41,6 +41,12 @@ public class Product {
     public Product() {
     }
 
+    public Product(int price, String productName, String partNumber) {
+        this.price = price;
+        this.productName = productName;
+        this.partNumber = partNumber;
+    }
+
     public int getId() {
         return id;
     }
@@ -103,6 +109,14 @@ public class Product {
 
     public void setValueOfStringPropertiesList(List<ValueOfStringProperties> valueOfStringPropertiesList) {
         this.valueOfStringPropertiesList = valueOfStringPropertiesList;
+    }
+
+    public List<ValueOfIntegerProperties> getValueOfIntegerPropertiesList() {
+        return valueOfIntegerPropertiesList;
+    }
+
+    public void setValueOfIntegerPropertiesList(List<ValueOfIntegerProperties> valueOfIntegerPropertiesList) {
+        this.valueOfIntegerPropertiesList = valueOfIntegerPropertiesList;
     }
 
     @Override
