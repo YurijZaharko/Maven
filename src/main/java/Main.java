@@ -28,9 +28,23 @@ public class Main {
     private static final ProductDao PRODUCT_DAO = new ProductDaoImplementation(Product.class, entityManager);
 
     public static void main(String[] args) {
+        List<Brand> brandList1 = entityManager.createQuery("SELECT brand FROM Brand brand WHERE (id = 2 or id = 5)", Brand.class)
+                .getResultList();
+        System.out.println(brandList1);
+        System.out.println();
+
+        List<Product> brandList2 = entityManager.createQuery("SELECT product FROM Product product WHERE price between :price1 and :price2", Product.class)
+                .setParameter("price1", 100).setParameter("price2", 5600).getResultList();
+        System.out.println(brandList2);
+        System.out.println();
+
+        List<Product> productList3 = entityManager.createQuery("select product from Product product order by product.price asc ", Product.class)
+                .setFirstResult(0).setMaxResults(2).getResultList();
+        System.out.println(productList3);
+        System.out.println("productList3");
+
         Scann scann = new Scann();
         Control control = new Control(scann);
-
         List<Category> categoryListTest = entityManager.createQuery("SELECT category FROM Category category JOIN FETCH category.productList product where product.partNumber=:partNumber",
                 Category.class).setParameter("partNumber", "DTSE9_16GB_(DTSE9H/16GB)").getResultList();
         System.out.println(categoryListTest);
@@ -248,18 +262,19 @@ public class Main {
                     int price = scann.readInt("Price ?");
                     Product product = new Product(price, productName, partNumber);
 
-//
-//                    List<Brand> brandList = entityManager.createQuery("SELECT brand from Brand brand", Brand.class).getResultList();
-//                    for (Brand b:brandList) {
-//                        System.out.print(b.getBrandName() + ", ");
-//                    }
-//                    System.out.println();
-//                    String brandName = scann.readString("Choose Brand name?");
-//                    Brand brand = entityManager.createQuery("SELECT brand FROM Brand brand where brand.brandName=:brand",
-//                            Brand.class).setParameter("brand",brandName).getSingleResult();
-//                    product.setBrand(brand);
 
-                    List<Country> countryList = entityManager.createQuery("SELECT country from Country country", Country.class).getResultList();
+                List<Brand> brandList = entityManager.createQuery("SELECT brand from Brand brand", Brand.class).getResultList();
+                  for (Brand b:brandList) {
+                      System.out.print(b.getBrandName() + ", ");
+                  }
+                   System.out.println();
+                   String brandName = scann.readString("Choose Brand name?");
+                   Brand brand = entityManager.createQuery("SELECT brand FROM Brand brand where brand.brandName=:brandName",
+                           Brand.class).setParameter("brandName",brandName).getSingleResult();
+                   product.setBrand(brand);
+
+                    List<Country> countryList = entityManager.createQuery("SELECT country from Country country", Country.class)
+                            .getResultList();
                     for (Country c:countryList) {
                         System.out.print(c + " ");
                     }
@@ -269,7 +284,8 @@ public class Main {
                             Country.class).setParameter("country", countryName).getSingleResult();
                     product.setCountry(country);
 
-                    List<Category> categoryList = entityManager.createQuery("SELECT category from Category category", Category.class).getResultList();
+                    List<Category> categoryList = entityManager.createQuery("SELECT category from Category category", Category.class)
+                            .getResultList();
                     for (Category category:categoryList) {
                         System.out.print(category + " ");
                     }
