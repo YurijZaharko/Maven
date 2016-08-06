@@ -1,4 +1,4 @@
-import org.hibernate.sql.Select;
+
 import proj.control.Control;
 import proj.control.Scann;
 import proj.dao.*;
@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.*;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,28 +30,51 @@ public class Main {
     private static final ProductDao PRODUCT_DAO = new ProductDaoImplementation(Product.class, entityManager);
 
     public static void main(String[] args) {
-        List<Brand> brandList1 = entityManager.createQuery("SELECT brand FROM Brand brand WHERE (id = 2 or id = 5)", Brand.class)
-                .getResultList();
-        System.out.println(brandList1);
+//        List<Brand> brandList1 = entityManager.createQuery("SELECT brand FROM Brand brand WHERE (id = 2 or id = 5)", Brand.class)
+//                .getResultList();
+//        System.out.println(brandList1);
+//        System.out.println();
+//
+//        List<Product> brandList2 = entityManager.createQuery("SELECT product FROM Product product WHERE price between :price1 and :price2", Product.class)
+//                .setParameter("price1", 100).setParameter("price2", 5600).getResultList();
+//        System.out.println(brandList2);
+//        System.out.println();
+//
+//        List<Product> productList3 = entityManager.createQuery("select product from Product product order by product.price asc ", Product.class)
+//                .setFirstResult(0).setMaxResults(2).getResultList();
+//        System.out.println(productList3);
+//        System.out.println("productList3");
+//
+//
+//        List<Category> categoryListTest = entityManager.createQuery("SELECT category FROM Category category JOIN FETCH category.productList product where product.partNumber=:partNumber",
+//                Category.class).setParameter("partNumber", "DTSE9_16GB_(DTSE9H/16GB)").getResultList();
+//        System.out.println(categoryListTest);
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
+        criteriaQuery.select(root);
+//        int priceTest = 5600;
+//        Predicate predicateEqual = criteriaBuilder.equal(root.get("price"), priceTest);
+
+
+//        Predicate predicateIn = root.get("price").in(Arrays.asList(130,5600));
+
+        Join<Product,Brand>  brandJoin = root.join("brand");
+        Predicate countryNameTest = criteriaBuilder.equal(brandJoin.get("brandName"), "ASUS");
+
+        criteriaQuery.where(countryNameTest);
+        List<Product> productList = entityManager.createQuery(criteriaQuery).getResultList();
+        System.out.println(productList);
         System.out.println();
 
-        List<Product> brandList2 = entityManager.createQuery("SELECT product FROM Product product WHERE price between :price1 and :price2", Product.class)
-                .setParameter("price1", 100).setParameter("price2", 5600).getResultList();
-        System.out.println(brandList2);
-        System.out.println();
 
-        List<Product> productList3 = entityManager.createQuery("select product from Product product order by product.price asc ", Product.class)
-                .setFirstResult(0).setMaxResults(2).getResultList();
-        System.out.println(productList3);
-        System.out.println("productList3");
+
+
+
 
         Scann scann = new Scann();
         Control control = new Control(scann);
-        List<Category> categoryListTest = entityManager.createQuery("SELECT category FROM Category category JOIN FETCH category.productList product where product.partNumber=:partNumber",
-                Category.class).setParameter("partNumber", "DTSE9_16GB_(DTSE9H/16GB)").getResultList();
-        System.out.println(categoryListTest);
-
-
         boolean isRun = true;
         while (isRun){
             switch (control.mainMenu()){
