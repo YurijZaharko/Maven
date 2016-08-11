@@ -31,10 +31,9 @@ public class Control {
 
     public int subMenu(){
         System.out.println("1. Add item");
-        System.out.println("2. Update item");
-        System.out.println("3. Delete item");
-        System.out.println("4. Find by id");
-        System.out.println("5. Find All");
+        System.out.println("2. Delete item");
+        System.out.println("3. Find by name");
+        System.out.println("4. Find All");
 
         return scann.readInt("Enter number");
     }

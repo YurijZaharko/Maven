@@ -1,9 +1,15 @@
 
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import proj.control.Control;
 import proj.control.Scann;
 import proj.dao.*;
 import proj.dao.implementation.*;
 import proj.entity.*;
+import proj.service.BrandService;
+import proj.service.CategoryService;
+import proj.service.CountryService;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -18,61 +24,12 @@ import java.util.List;
  * Created by SCIP on 29.07.2016.
  */
 public class Main {
-    static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("primary");
-    static EntityManager entityManager = entityManagerFactory.createEntityManager();
-    private static final BrandDao BRAND_DAO = new BrandDaoImplementation(Brand.class, entityManager);
-    private static final CountryDao COUNTRY_DAO = new CountryDaoImplementation(Country.class, entityManager);
-    private static final CategoryDao CATEGORY_DAO = new CategoryDaoImplementation(Category.class, entityManager);
-    private static final StringPropertiesDao STRING_PROPERTIES_DAO = new StringPropertiesDaoImplementation(StringProperties.class, entityManager);
-    private static final ValueOfStringPropertiesDao VALUE_OF_STRING_PROPERTIES_DAO = new ValueOfStringPropertiesDaoImplement(ValueOfStringProperties.class, entityManager);
-    private static final ValueOfIntegerPropertiesDao VALUE_OF_INTEGER_PROPERTIES_DAO = new ValueOfIntegerPropertiesDaoImplement(ValueOfIntegerProperties.class, entityManager);
-    private static final IntegerPropertiesDao INTEGER_PROPERTIES_DAO = new IntegerPropertiesDaoImplementation(IntegerProperties.class, entityManager);
-    private static final ProductDao PRODUCT_DAO = new ProductDaoImplementation(Product.class, entityManager);
+    static final ConfigurableApplicationContext CONTEXT = new ClassPathXmlApplicationContext("/META-INF/applicationContext.xml");
+    static final BrandService BRAND_SERVICE = CONTEXT.getBean(BrandService.class);
+    static final CountryService COUNTRY_SERVICE = CONTEXT.getBean(CountryService.class);
+    static final CategoryService CATEGORY_SERVICE = CONTEXT.getBean(CategoryService.class);
 
     public static void main(String[] args) {
-//        List<Brand> brandList1 = entityManager.createQuery("SELECT brand FROM Brand brand WHERE (id = 2 or id = 5)", Brand.class)
-//                .getResultList();
-//        System.out.println(brandList1);
-//        System.out.println();
-//
-//        List<Product> brandList2 = entityManager.createQuery("SELECT product FROM Product product WHERE price between :price1 and :price2", Product.class)
-//                .setParameter("price1", 100).setParameter("price2", 5600).getResultList();
-//        System.out.println(brandList2);
-//        System.out.println();
-//
-//        List<Product> productList3 = entityManager.createQuery("select product from Product product order by product.price asc ", Product.class)
-//                .setFirstResult(0).setMaxResults(2).getResultList();
-//        System.out.println(productList3);
-//        System.out.println("productList3");
-//
-//
-//        List<Category> categoryListTest = entityManager.createQuery("SELECT category FROM Category category JOIN FETCH category.productList product where product.partNumber=:partNumber",
-//                Category.class).setParameter("partNumber", "DTSE9_16GB_(DTSE9H/16GB)").getResultList();
-//        System.out.println(categoryListTest);
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
-        Root<Product> root = criteriaQuery.from(Product.class);
-        criteriaQuery.select(root);
-//        int priceTest = 5600;
-//        Predicate predicateEqual = criteriaBuilder.equal(root.get("price"), priceTest);
-
-
-//        Predicate predicateIn = root.get("price").in(Arrays.asList(130,5600));
-
-        Join<Product,Brand>  brandJoin = root.join("brand");
-        Predicate countryNameTest = criteriaBuilder.equal(brandJoin.get("brandName"), "ASUS");
-
-        criteriaQuery.where(countryNameTest);
-        List<Product> productList = entityManager.createQuery(criteriaQuery).getResultList();
-        System.out.println(productList);
-        System.out.println();
-
-
-
-
-
-
         Scann scann = new Scann();
         Control control = new Control(scann);
         boolean isRun = true;
@@ -81,24 +38,20 @@ public class Main {
                 case 1: {
                     switch (control.subMenu()){
                         case 1:{
-                            BRAND_DAO.save(new Brand(scann.readString("Brand name?")));
+                            BRAND_SERVICE.save(scann.readString("Brand name?"));
                             break;
                         }
                         case 2:{
-                            BRAND_DAO.update(new Brand(scann.readString("Brand name?")));
+                            BRAND_SERVICE.delete(scann.readString("Brand name?"));
                             break;
                         }
                         case 3:{
-                            BRAND_DAO.delete(new Brand(scann.readString("Brand name?")));
-                            break;
-                        }
-                        case 4:{
-                            Brand brand = BRAND_DAO.find(scann.readInt("Id of item?"));
+                            Brand brand = BRAND_SERVICE.findByName(scann.readString("Name of item?"));
                             System.out.println(brand);
                             break;
                         }
-                        case 5:{
-                            List<Brand> brandList= BRAND_DAO.findAll();
+                        case 4:{
+                            List<Brand> brandList= BRAND_SERVICE.findAll();
                             for (Iterator<Brand> iterator = brandList.iterator(); iterator.hasNext(); ) {
                                 Brand bran = iterator.next();
                                 System.out.println(bran);
@@ -114,24 +67,20 @@ public class Main {
                 case 2: {
                     switch (control.subMenu()){
                         case 1:{
-                            COUNTRY_DAO.save(new Country(scann.readString("Country name?")));
+                            COUNTRY_SERVICE.save(scann.readString("Country name?"));
                             break;
                         }
                         case 2:{
-                            COUNTRY_DAO.update(new Country(scann.readString("Country name?")));
+                            COUNTRY_SERVICE.delete(scann.readString("Country name?"));
                             break;
                         }
                         case 3:{
-                            COUNTRY_DAO.delete(new Country(scann.readString("Country name?")));
-                            break;
-                        }
-                        case 4:{
-                            Country Country = COUNTRY_DAO.find(scann.readInt("Id of item?"));
+                            Country Country = COUNTRY_SERVICE.findByName(scann.readString("Name of item?"));
                             System.out.println(Country);
                             break;
                         }
-                        case 5:{
-                            List<Country> CountryList= COUNTRY_DAO.findAll();
+                        case 4:{
+                            List<Country> CountryList= COUNTRY_SERVICE.findAll();
                             for (Iterator<Country> iterator = CountryList.iterator(); iterator.hasNext(); ) {
                                 Country bran = iterator.next();
                                 System.out.println(bran);
@@ -147,24 +96,20 @@ public class Main {
                 case 3: {
                     switch (control.subMenu()){
                         case 1:{
-                            CATEGORY_DAO.save(new Category(scann.readString("Category name?")));
+                            CATEGORY_SERVICE.save(scann.readString("Category name?"));
                             break;
                         }
                         case 2:{
-                            CATEGORY_DAO.update(new Category(scann.readString("Category name?")));
+                            CATEGORY_SERVICE.delete(scann.readString("Category name?"));
                             break;
                         }
                         case 3:{
-                            CATEGORY_DAO.delete(new Category(scann.readString("Category name?")));
-                            break;
-                        }
-                        case 4:{
-                            Category Category = CATEGORY_DAO.find(scann.readInt("Id of item?"));
+                            Category Category = CATEGORY_SERVICE.findByName(scann.readString("Name of item?"));
                             System.out.println(Category);
                             break;
                         }
-                        case 5:{
-                            List<Category> CategoryList= CATEGORY_DAO.findAll();
+                        case 4:{
+                            List<Category> CategoryList= CATEGORY_SERVICE.findAll();
                             for (Iterator<Category> iterator = CategoryList.iterator(); iterator.hasNext(); ) {
                                 Category category = iterator.next();
                                 System.out.println(category);
@@ -330,3 +275,54 @@ public class Main {
         }
     }
 }
+
+
+//    static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("primary");
+//    static EntityManager entityManager = entityManagerFactory.createEntityManager();
+//    private static final BrandDao BRAND_DAO = new BrandDaoImplementation(Brand.class, entityManager);
+//    private static final CountryDao COUNTRY_DAO = new CountryDaoImplementation(Country.class, entityManager);
+//    private static final CategoryDao CATEGORY_DAO = new CategoryDaoImplementation(Category.class, entityManager);
+//    private static final StringPropertiesDao STRING_PROPERTIES_DAO = new StringPropertiesDaoImplementation(StringProperties.class, entityManager);
+//    private static final ValueOfStringPropertiesDao VALUE_OF_STRING_PROPERTIES_DAO = new ValueOfStringPropertiesDaoImplement(ValueOfStringProperties.class, entityManager);
+//    private static final ValueOfIntegerPropertiesDao VALUE_OF_INTEGER_PROPERTIES_DAO = new ValueOfIntegerPropertiesDaoImplement(ValueOfIntegerProperties.class, entityManager);
+//    private static final IntegerPropertiesDao INTEGER_PROPERTIES_DAO = new IntegerPropertiesDaoImplementation(IntegerProperties.class, entityManager);
+//    private static final ProductDao PRODUCT_DAO = new ProductDaoImplementation(Product.class, entityManager);
+
+
+////        List<Brand> brandList1 = entityManager.createQuery("SELECT brand FROM Brand brand WHERE (id = 2 or id = 5)", Brand.class)
+////                .getResultList();
+////        System.out.println(brandList1);
+////        System.out.println();
+////
+////        List<Product> brandList2 = entityManager.createQuery("SELECT product FROM Product product WHERE price between :price1 and :price2", Product.class)
+////                .setParameter("price1", 100).setParameter("price2", 5600).getResultList();
+////        System.out.println(brandList2);
+////        System.out.println();
+////
+////        List<Product> productList3 = entityManager.createQuery("select product from Product product order by product.price asc ", Product.class)
+////                .setFirstResult(0).setMaxResults(2).getResultList();
+////        System.out.println(productList3);
+////        System.out.println("productList3");
+////
+////
+////        List<Category> categoryListTest = entityManager.createQuery("SELECT category FROM Category category JOIN FETCH category.productList product where product.partNumber=:partNumber",
+////                Category.class).setParameter("partNumber", "DTSE9_16GB_(DTSE9H/16GB)").getResultList();
+////        System.out.println(categoryListTest);
+//
+//        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+//        Root<Product> root = criteriaQuery.from(Product.class);
+//        criteriaQuery.select(root);
+////        int priceTest = 5600;
+////        Predicate predicateEqual = criteriaBuilder.equal(root.get("price"), priceTest);
+//
+//
+////        Predicate predicateIn = root.get("price").in(Arrays.asList(130,5600));
+//
+//        Join<Product,Brand>  brandJoin = root.join("brand");
+//        Predicate countryNameTest = criteriaBuilder.equal(brandJoin.get("brandName"), "ASUS");
+//
+//        criteriaQuery.where(countryNameTest);
+//        List<Product> productList = entityManager.createQuery(criteriaQuery).getResultList();
+//        System.out.println(productList);
+//        System.out.println();
