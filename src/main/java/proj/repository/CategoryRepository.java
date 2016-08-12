@@ -13,6 +13,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Category findByName(String name);
 
     @Modifying
-    @Query("DELETE FROM Category category WHERE category.categoryName=:name")
+    @Query("DELETE FROM Category category WHERE category.name=:name")
     void deleteByName(@Param("name") String name);
+
+    Category findById(int id);
 }

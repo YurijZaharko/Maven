@@ -12,7 +12,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String categoryName;
+    private String name;
 
     @OneToMany(mappedBy = "parentId")
     private
@@ -33,8 +33,13 @@ public class Category {
     public Category() {
     }
 
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(String name) {
+        this.name = name;
+    }
+
+    public Category(String name, Category parentId) {
+        this.name = name;
+        this.parentId = parentId;
     }
 
     public int getId() {
@@ -45,12 +50,12 @@ public class Category {
         this.id = id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String categoryName) {
+        this.name = categoryName;
     }
 
     public List<Category> getChildId() {
@@ -96,7 +101,7 @@ public class Category {
     @Override
     public String toString() {
         return "Category{" +
-                "categoryName='" + categoryName + '\'' +
+                "categoryName='" + name + '\'' +
                 '}';
     }
 }

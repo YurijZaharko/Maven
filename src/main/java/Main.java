@@ -7,9 +7,7 @@ import proj.control.Scann;
 import proj.dao.*;
 import proj.dao.implementation.*;
 import proj.entity.*;
-import proj.service.BrandService;
-import proj.service.CategoryService;
-import proj.service.CountryService;
+import proj.service.*;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -24,12 +22,19 @@ import java.util.List;
  * Created by SCIP on 29.07.2016.
  */
 public class Main {
+
     static final ConfigurableApplicationContext CONTEXT = new ClassPathXmlApplicationContext("/META-INF/applicationContext.xml");
     static final BrandService BRAND_SERVICE = CONTEXT.getBean(BrandService.class);
     static final CountryService COUNTRY_SERVICE = CONTEXT.getBean(CountryService.class);
     static final CategoryService CATEGORY_SERVICE = CONTEXT.getBean(CategoryService.class);
+    static final StringPropertiesService STRING_PROPERTIES_SERVICE = CONTEXT.getBean(StringPropertiesService.class);
+    static final IntegerPropertiesService INTEGER_PROPERTIES_SERVICE = CONTEXT.getBean(IntegerPropertiesService.class);
+    static final ValueOfIntegerPropertiesService VALUE_OF_INTEGER_PROPERTIES_SERVICE = CONTEXT.getBean(ValueOfIntegerPropertiesService.class);
+    static final ValueOfStringPropertiesService VALUE_OF_STRING_PROPERTIES_SERVICE = CONTEXT.getBean(ValueOfStringPropertiesService.class);
 
     public static void main(String[] args) {
+
+
         Scann scann = new Scann();
         Control control = new Control(scann);
         boolean isRun = true;
@@ -126,8 +131,7 @@ public class Main {
                     switch (control.subMenu()){
                         case 1:{
                             String propertyName = scann.readString("String Property name?");
-                            StringProperties stringProperties = new StringProperties(propertyName);
-                            STRING_PROPERTIES_DAO.save(stringProperties);
+                            STRING_PROPERTIES_SERVICE.save(propertyName);
                             boolean addValue = true;
                             String valueOfStringProperty = null;
                             ValueOfStringProperties valueOfStringProperties = null;
@@ -136,58 +140,30 @@ public class Main {
                                 System.out.println("0. Exit");
                                 switch (scann.readInt("Choose number")){
                                     case 1:{
-                                        valueOfStringProperty = scann.readString("String value&");
+                                        valueOfStringProperty = scann.readString("String value?");
+                                        VALUE_OF_STRING_PROPERTIES_SERVICE.save(valueOfStringProperty);
+
                                         valueOfStringProperties = new ValueOfStringProperties(valueOfStringProperty);
-                                        VALUE_OF_STRING_PROPERTIES_DAO.save(valueOfStringProperties);
                                     }
                                     default:{
                                         addValue = false;
                                     }
-                                    stringProperties.getValueOfStringPropertiesList().add(valueOfStringProperties);
-                                    STRING_PROPERTIES_DAO.save(stringProperties);
                                 }
                             }
                             break;
                         }
                         case 2:{
-                            String propertyName = scann.readString("String Property name?");
-                            StringProperties stringProperties = new StringProperties(propertyName);
-                            STRING_PROPERTIES_DAO.update(stringProperties);
-                            boolean addValue = true;
-                            String valueOfStringProperty = null;
-                            ValueOfStringProperties valueOfStringProperties = null;
-                            while (addValue){
-                                System.out.println("1. Add value");
-                                System.out.println("0. Exit");
-                                switch (scann.readInt("Choose number")){
-                                    case 1:{
-                                        valueOfStringProperty = scann.readString("String value&");
-                                        valueOfStringProperties = new ValueOfStringProperties(valueOfStringProperty);
-                                        VALUE_OF_STRING_PROPERTIES_DAO.update(valueOfStringProperties);
-                                    }
-                                    default:{
-                                        addValue = false;
-                                    }
-                                    stringProperties.getValueOfStringPropertiesList().add(valueOfStringProperties);
-                                    STRING_PROPERTIES_DAO.save(stringProperties);
-                                }
-                            }
+                            STRING_PROPERTIES_SERVICE.delete(scann.readString("String Property name?"));
                             break;
                         }
                         case 3:{
-                            StringProperties stringProperties = new StringProperties(scann.readString("String Property name?"));
-                            STRING_PROPERTIES_DAO.delete(stringProperties);
-                            break;
-                        }
-                        case 4:{
-                            StringProperties stringProperties = STRING_PROPERTIES_DAO.find(scann.readInt("Id of item?"));
+                            StringProperties stringProperties = STRING_PROPERTIES_SERVICE.findByPropertyName(scann.readString("Name of item?"));
                             System.out.println(stringProperties);
                             break;
                         }
-                        case 5:{
-                            List<StringProperties> StringPropertiesList= STRING_PROPERTIES_DAO.findAll();
-                            for (Iterator<StringProperties> iterator = StringPropertiesList.iterator(); iterator.hasNext(); ) {
-                                StringProperties bran = iterator.next();
+                        case 4:{
+                            List<StringProperties> StringPropertiesList= STRING_PROPERTIES_SERVICE.findAll();
+                            for (StringProperties bran : StringPropertiesList) {
                                 System.out.println(bran);
                             }
                             break;
@@ -198,10 +174,12 @@ public class Main {
                     }
                     break;
                 }
+
+
                 case 5: {
                     String propertyName = scann.readString("Integer property name?");
                     IntegerProperties integerProperties = new IntegerProperties(propertyName);
-                    INTEGER_PROPERTIES_DAO.save(integerProperties);
+                    INTEGER_PROPERTIES_SERVICE.save(propertyName);
                     boolean addValue = true;
                     Integer valueOfIntegerProperty = null;
                     ValueOfIntegerProperties valueOfIntegerProperties = null;
@@ -212,13 +190,13 @@ public class Main {
                             case 1:{
                                 valueOfIntegerProperty = scann.readInt("Integer value?");
                                 valueOfIntegerProperties = new ValueOfIntegerProperties(valueOfIntegerProperty);
-                                VALUE_OF_INTEGER_PROPERTIES_DAO.save(valueOfIntegerProperties);
+                                VALUE_OF_INTEGER_PROPERTIES_SERVICE.save(valueOfIntegerProperty);
                             }
                             default:{
                                 addValue = false;
                             }
                             integerProperties.getValueOfIntegerPropertiesList().add(valueOfIntegerProperties);
-                            INTEGER_PROPERTIES_DAO.save(integerProperties);
+                            INTEGER_PROPERTIES_SERVICE.save(propertyName);
                         }
                     }
                     break;
@@ -226,47 +204,48 @@ public class Main {
                 case 6:{
                     break;
                 }
-                case 7: {
-                    String productName = scann.readString("product Name ?");
-                    String partNumber = scann.readString("part Number ?");
-                    int price = scann.readInt("Price ?");
-                    Product product = new Product(price, productName, partNumber);
-
-
-                List<Brand> brandList = entityManager.createQuery("SELECT brand from Brand brand", Brand.class).getResultList();
-                  for (Brand b:brandList) {
-                      System.out.print(b.getBrandName() + ", ");
-                  }
-                   System.out.println();
-                   String brandName = scann.readString("Choose Brand name?");
-                   Brand brand = entityManager.createQuery("SELECT brand FROM Brand brand where brand.brandName=:brandName",
-                           Brand.class).setParameter("brandName",brandName).getSingleResult();
-                   product.setBrand(brand);
-
-                    List<Country> countryList = entityManager.createQuery("SELECT country from Country country", Country.class)
-                            .getResultList();
-                    for (Country c:countryList) {
-                        System.out.print(c + " ");
-                    }
-                    System.out.println();
-                    String countryName = scann.readString("Choose country");
-                    Country country = entityManager.createQuery("SELECT c FROM Country c where c.name=:country",
-                            Country.class).setParameter("country", countryName).getSingleResult();
-                    product.setCountry(country);
-
-                    List<Category> categoryList = entityManager.createQuery("SELECT category from Category category", Category.class)
-                            .getResultList();
-                    for (Category category:categoryList) {
-                        System.out.print(category + " ");
-                    }
-                    System.out.println();
-                    String categoryName = scann.readString("Choose category name");
-                    Category category = entityManager.createQuery("SELECT category FROM Category category where category.categoryName=:category",
-                            Category.class).setParameter("category", categoryName).getSingleResult();
-                    product.setCategory(category);
-                    PRODUCT_DAO.save(product);
-                    break;
-                }
+//
+//                case 7: {
+//                    String productName = scann.readString("product Name ?");
+//                    String partNumber = scann.readString("part Number ?");
+//                    int price = scann.readInt("Price ?");
+//                    Product product = new Product(price, productName, partNumber);
+//
+//
+//                List<Brand> brandList = entityManager.createQuery("SELECT brand from Brand brand", Brand.class).getResultList();
+//                  for (Brand b:brandList) {
+//                      System.out.print(b.getBrandName() + ", ");
+//                  }
+//                   System.out.println();
+//                   String brandName = scann.readString("Choose Brand name?");
+//                   Brand brand = entityManager.createQuery("SELECT brand FROM Brand brand where brand.brandName=:brandName",
+//                           Brand.class).setParameter("brandName",brandName).getSingleResult();
+//                   product.setBrand(brand);
+//
+//                    List<Country> countryList = entityManager.createQuery("SELECT country from Country country", Country.class)
+//                            .getResultList();
+//                    for (Country c:countryList) {
+//                        System.out.print(c + " ");
+//                    }
+//                    System.out.println();
+//                    String countryName = scann.readString("Choose country");
+//                    Country country = entityManager.createQuery("SELECT c FROM Country c where c.name=:country",
+//                            Country.class).setParameter("country", countryName).getSingleResult();
+//                    product.setCountry(country);
+//
+//                    List<Category> categoryList = entityManager.createQuery("SELECT category from Category category", Category.class)
+//                            .getResultList();
+//                    for (Category category:categoryList) {
+//                        System.out.print(category + " ");
+//                    }
+//                    System.out.println();
+//                    String categoryName = scann.readString("Choose category name");
+//                    Category category = entityManager.createQuery("SELECT category FROM Category category where category.categoryName=:category",
+//                            Category.class).setParameter("category", categoryName).getSingleResult();
+//                    product.setCategory(category);
+//                    PRODUCT_DAO.save(product);
+//                    break;
+//                }
 
                 default:{
                     isRun = false;

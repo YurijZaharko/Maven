@@ -25,6 +25,10 @@ public class ListOfPropertiesString {
     public ListOfPropertiesString() {
     }
 
+    public ListOfPropertiesString(Category category) {
+        this.category = category;
+    }
+
     public int getId() {
         return id;
     }
