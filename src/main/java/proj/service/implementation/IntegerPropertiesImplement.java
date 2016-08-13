@@ -1,6 +1,7 @@
 package proj.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import proj.entity.IntegerProperties;
 import proj.repository.IntegerPropertiesRepository;
 import proj.service.IntegerPropertiesService;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by SCIP on 11.08.2016.
  */
+@Service
 public class IntegerPropertiesImplement implements IntegerPropertiesService{
     @Autowired
     IntegerPropertiesRepository integerPropertiesRepository;

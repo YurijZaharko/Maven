@@ -1,5 +1,6 @@
 package proj.service;
 
+import org.springframework.stereotype.Service;
 import proj.entity.Country;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Created by SCIP on 11.08.2016.
  */
+
 public interface CountryService  {
     void save(String name);
     Country findByName(String name);

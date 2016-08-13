@@ -13,7 +13,7 @@ public interface IntegerPropertiesRepository extends JpaRepository<IntegerProper
     IntegerProperties findByName(String name);
 
     @Modifying
-    @Query("DELETE FROM IntegerProperties integerProperty WHERE  integerProperty.propertyName=:name")
+    @Query("DELETE FROM IntegerProperties integerProperty WHERE  integerProperty.name=:name")
     void deleteByName(@Param("name") String name);
 
 }

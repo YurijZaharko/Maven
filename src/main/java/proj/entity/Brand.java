@@ -12,15 +12,15 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String brandName;
+    private String name;
     @OneToMany(mappedBy = "brand")
     List<Product> productList = new ArrayList<Product>();
 
     public Brand() {
     }
 
-    public Brand(String brandName) {
-        this.brandName = brandName;
+    public Brand(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -31,19 +31,19 @@ public class Brand {
         this.id = id;
     }
 
-    public String getBrandName() {
-        return brandName;
+    public String getName() {
+        return name;
     }
 
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
+    public void setName(String brandName) {
+        this.name = brandName;
     }
 
     @Override
     public String toString() {
         return "Brand{" +
                 "id=" + id +
-                ", brandName='" + brandName + '\'' +
+                ", brandName='" + name + '\'' +
                 '}';
     }
 }

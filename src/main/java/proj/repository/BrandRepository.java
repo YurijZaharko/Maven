@@ -14,6 +14,6 @@ public interface BrandRepository extends JpaRepository<Brand,Integer> {
     Brand findByName(String name);
 
     @Modifying
-    @Query("DELETE FROM Brand brand WHERE brand.brandName=:name" )
+    @Query("DELETE FROM Brand brand WHERE brand.name=:name" )
     void deleteByName(@Param("name") String name);
 }
